@@ -120,8 +120,8 @@ function createWordCards() {
           [DocumentApp.Attribute.VERTICAL_ALIGNMENT]: DocumentApp.VerticalAlignment.TOP,
         });
 
-        // シートの RichText を Docs セルに忠実コピー（堅牢版）
-        copyRichTextToDocCell_(richTextGrid[r][c], tc);
+        // シートの RichText と配置を Docs セルに忠実コピー（堅牢版）
+        copyRichTextToDocCell_(richTextGrid[r][c], tc, alignmentGrid[r][c]);
       }
     }
 
@@ -168,9 +168,9 @@ function createDocumentShell_() {
  * - 書式ラン（getRuns）の start/end を「排他的 end」で正規化し、範囲外はクランプ
  * - 太字/斜体/下線/取消線/色/サイズ/フォントを反映
  * - リンクは RichTextValue.getLinkUrl(start, endExclusive) または全体 getLinkUrl() を使用
- * - 段落整形は一切しない（ユーザーの書式を尊重）
+ * - 配置情報（左寄せ/中央寄せ/右寄せ）も反映する
  */
-function copyRichTextToDocCell_(cellRich, tableCell) {
+function copyRichTextToDocCell_(cellRich, tableCell, alignment) {
   // Docs 側セルに“空段落”を作り、編集対象を取得
   const paragraph = tableCell.appendParagraph('');
   const ed = paragraph.editAsText();
@@ -251,5 +251,22 @@ function copyRichTextToDocCell_(cellRich, tableCell) {
     if (allLink) ed.setLinkUrl(from, to, allLink);
   }
 
-  // 段落の整列・インデント等は一切変更しない
+  // 段落の配置を適用（中央寄せなど）
+  if (alignment) {
+    let docAlignment;
+    switch (alignment) {
+      case 'left':
+        docAlignment = DocumentApp.HorizontalAlignment.LEFT;
+        break;
+      case 'center':
+        docAlignment = DocumentApp.HorizontalAlignment.CENTER;
+        break;
+      case 'right':
+        docAlignment = DocumentApp.HorizontalAlignment.RIGHT;
+        break;
+      default:
+        docAlignment = DocumentApp.HorizontalAlignment.LEFT;
+    }
+    paragraph.setAlignment(docAlignment);
+  }
 }
