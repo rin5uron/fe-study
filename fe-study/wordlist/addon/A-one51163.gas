@@ -15,6 +15,11 @@
 - Googleドキュメントの最小余白制限（12.7mm）を考慮して、印刷可能領域を最大活用します。
 - カードサイズは印刷可能領域（184.6×271.6mm）を30面で分割して自動計算されます。
 - 実際の印刷時にA-one 51163用紙の枠にピッタリ合うよう最適化されています。
+
+**微調整が必要な場合：**
+- 印刷結果が少し小さい → `MIN_MARGIN` を 12.5mm に減らす
+- 印刷結果が少し大きい → `MIN_MARGIN` を 13.0mm に増やす  
+- セル内の文字が窮屈 → `CELL_PADDING_LEFT_PT` / `CELL_PADDING_RIGHT_PT` を増やす
  */
 
 // ===================== 設定（必要に応じて微調整） =====================
@@ -135,7 +140,12 @@ function createWordCards() {
     );
 
   } catch (err) {
-    ui.alert('エラー', String(err && err.stack ? err.stack : err), ui.ButtonSet.OK);
+    console.error('単語カード生成エラー:', err);
+    ui.alert(
+      'エラーが発生しました', 
+      `単語カードの生成中にエラーが発生しました。\n\n詳細: ${err.message || err}\n\n※ 初回実行時はGoogleドライブへのアクセス許可が必要です。`, 
+      ui.ButtonSet.OK
+    );
   }
 }
 
