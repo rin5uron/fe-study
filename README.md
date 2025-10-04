@@ -1,9 +1,6 @@
 # 基本情報技術者試験 学習リポジトリ 📚
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Study Progress](https://img.shields.io/badge/進捗-0%25-red.svg)
-![Last Commit](https://img.shields.io/github/last-commit/yourusername/fe-study)
-![Issues](https://img.shields.io/github/issues/yourusername/fe-study)
+
 
 ## 🎯 目標
 
