@@ -12,7 +12,11 @@ assignees: []
 （問題文をコピペ）
 ```
 
+**問題番号**: （例: C084）
+
 ---
+
+<br>
 
 ### 💡 コード
 
@@ -20,23 +24,30 @@ assignees: []
 <summary>実装コード（クリックで展開）</summary>
 
 ```javascript
-// ここに実装したコードを記載
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+// 自分の得意な言語で
+// Let's チャレンジ！！
+var lines = [];
+var reader = require('readline').createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+reader.on('line', (line) => {
+  lines.push(line);
+});
+reader.on('close', () => {
+  console.log(lines[0]);
+});
 ```
 
 </details>
 
 ---
 
+<br>
+
 ### 📚 学んだこと
-
-このセクションには、問題を解いて理解したことや気づきを記録しましょう。後で復習するときに役立ちます。
-
-**記録すると良い内容の例：**
-- 使用したメソッドや構文の説明（例：`parseInt()`の使い方、`for`ループの書き方）
-- つまずいたポイントとその解決方法
-- 標準入力・標準出力の仕組み
-- アルゴリズムの考え方や手順
-- 似た問題に応用できそうなポイント
 
 -
 -
