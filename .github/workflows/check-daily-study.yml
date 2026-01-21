@@ -1,0 +1,137 @@
+name: 毎日の勉強記録チェック
+
+on:
+  schedule:
+    # 毎日23:00 JST (14:00 UTC) に実行
+    - cron: '0 14 * * *'
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  check-daily-study:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+      
+      - name: 日付を取得
+        id: date
+        run: |
+          TZ='Asia/Tokyo' date +%Y-%m-%d > date.txt
+          echo "date=$(cat date.txt)" >> $GITHUB_OUTPUT
+      
+      - name: 今日の勉強記録Issueをチェック
+        id: check-issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const today = `${{ steps.date.outputs.date }}`;
+            const studyLabel = 'daily-study';
+            
+            // 今日の日付を含むタイトルのissueを検索
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: studyLabel,
+              state: 'all',
+              per_page: 100,
+              sort: 'created',
+              direction: 'desc'
+            });
+            
+            // 今日の日付を含むissueを探す（タイトルまたは本文に日付が含まれる）
+            const todayIssues = issues.data.filter(issue => {
+              const titleMatch = issue.title.includes(today);
+              const bodyMatch = issue.body && issue.body.includes(today);
+              // 作成日が今日かどうかもチェック（タイムゾーン考慮）
+              const createdDate = new Date(issue.created_at);
+              const todayDate = new Date(today + 'T00:00:00+09:00');
+              const tomorrowDate = new Date(todayDate);
+              tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+              const isToday = createdDate >= todayDate && createdDate < tomorrowDate;
+              
+              return titleMatch || bodyMatch || isToday;
+            });
+            
+            // 各ユーザーのラベルを確認
+            const users = ['user-rin5uron']; // ここに参加者のラベルを追加（例: ['user-rin5uron', 'user-partner']）
+            const missingUsers = [];
+            
+            for (const userLabel of users) {
+              const userIssue = todayIssues.find(issue => 
+                issue.labels.some(label => label.name === userLabel)
+              );
+              
+              if (!userIssue) {
+                missingUsers.push(userLabel);
+              }
+            }
+            
+            // 結果を出力
+            if (missingUsers.length > 0) {
+              console.log(`未提出のユーザー: ${missingUsers.join(', ')}`);
+              core.setOutput('missing_users', missingUsers.join(','));
+              core.setOutput('has_penalty', 'true');
+            } else {
+              console.log('全員提出済みです！');
+              core.setOutput('has_penalty', 'false');
+            }
+      
+      - name: ペナルティ記録Issueを作成/更新
+        if: steps.check-issues.outputs.has_penalty == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const today = `${{ steps.date.outputs.date }}`;
+            const missingUsers = `${{ steps.check-issues.outputs.missing_users }}`.split(',');
+            const penaltyAmount = 3000;
+            
+            // ペナルティ管理用のissueを検索
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'penalty-log',
+              state: 'open',
+              per_page: 10
+            });
+            
+            let penaltyIssue = issues.data.find(issue => 
+              issue.title.includes('ペナルティ記録')
+            );
+            
+            // ペナルティ記録issueがなければ作成
+            if (!penaltyIssue) {
+              penaltyIssue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '💰 ペナルティ記録',
+                body: `# ペナルティ記録\n\n未提出日のペナルティ（${penaltyAmount}円）を記録します。\n\n---\n\n`,
+                labels: ['penalty-log']
+              });
+            }
+            
+            // 今日のペナルティをコメントとして追加
+            const comment = `## ${today} のペナルティ\n\n`;
+            const userPenalties = missingUsers.map(user => {
+              const userName = user.replace('user-', '');
+              return `- **@${userName}**: ${penaltyAmount}円`;
+            }).join('\n');
+            
+            const total = missingUsers.length * penaltyAmount;
+            const fullComment = comment + userPenalties + `\n\n**合計**: ${total}円\n\n---\n\n`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: penaltyIssue.data.number,
+              body: fullComment
+            });
+            
+            console.log(`ペナルティを記録しました: ${missingUsers.join(', ')}`);
+      
+      - name: 成功通知
+        if: steps.check-issues.outputs.has_penalty == 'false'
+        run: |
+          echo "✅ 全員が今日の勉強記録を提出しました！"
