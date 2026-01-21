@@ -2,8 +2,8 @@ name: 毎日の勉強記録チェック
 
 on:
   schedule:
-    # 毎日23:00 JST (14:00 UTC) に実行
-    - cron: '0 14 * * *'
+    # 毎日朝5:00 JST (20:00 UTC 前日) に実行（前日の記録をチェック）
+    - cron: '0 20 * * *'
   workflow_dispatch: # 手動実行も可能
 
 jobs:
@@ -14,22 +14,26 @@ jobs:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v4
       
-      - name: 日付を取得
+      - name: 前日の日付を取得
         id: date
         run: |
-          TZ='Asia/Tokyo' date +%Y-%m-%d > date.txt
+          # UTC時間で前日の日付を取得（JSTの朝5時はUTCの前日20時）
+          TZ='Asia/Tokyo' date -d "1 day ago" +%Y-%m-%d > date.txt || TZ='Asia/Tokyo' date -v-1d +%Y-%m-%d > date.txt
           echo "date=$(cat date.txt)" >> $GITHUB_OUTPUT
+          echo "前日の日付: $(cat date.txt)"
       
-      - name: 今日の勉強記録Issueをチェック
+      - name: 前日の勉強記録Issueをチェック
         id: check-issues
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const today = `${{ steps.date.outputs.date }}`;
+            const yesterday = `${{ steps.date.outputs.date }}`;
             const studyLabel = 'daily-study';
             
-            // 今日の日付を含むタイトルのissueを検索
+            console.log(`前日（${yesterday}）の勉強記録をチェックします`);
+            
+            // 前日の日付を含むタイトルのissueを検索
             const issues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -40,18 +44,18 @@ jobs:
               direction: 'desc'
             });
             
-            // 今日の日付を含むissueを探す（タイトルまたは本文に日付が含まれる）
-            const todayIssues = issues.data.filter(issue => {
-              const titleMatch = issue.title.includes(today);
-              const bodyMatch = issue.body && issue.body.includes(today);
-              // 作成日が今日かどうかもチェック（タイムゾーン考慮）
+            // 前日の日付を含むissueを探す（タイトルまたは本文に日付が含まれる）
+            const yesterdayIssues = issues.data.filter(issue => {
+              const titleMatch = issue.title.includes(yesterday);
+              const bodyMatch = issue.body && issue.body.includes(yesterday);
+              // 作成日が前日かどうかもチェック（タイムゾーン考慮）
               const createdDate = new Date(issue.created_at);
-              const todayDate = new Date(today + 'T00:00:00+09:00');
-              const tomorrowDate = new Date(todayDate);
-              tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-              const isToday = createdDate >= todayDate && createdDate < tomorrowDate;
+              const yesterdayDate = new Date(yesterday + 'T00:00:00+09:00');
+              const todayDate = new Date(yesterdayDate);
+              todayDate.setDate(todayDate.getDate() + 1);
+              const isYesterday = createdDate >= yesterdayDate && createdDate < todayDate;
               
-              return titleMatch || bodyMatch || isToday;
+              return titleMatch || bodyMatch || isYesterday;
             });
             
             // 各ユーザーのラベルを確認
@@ -59,12 +63,15 @@ jobs:
             const missingUsers = [];
             
             for (const userLabel of users) {
-              const userIssue = todayIssues.find(issue => 
+              const userIssue = yesterdayIssues.find(issue => 
                 issue.labels.some(label => label.name === userLabel)
               );
               
               if (!userIssue) {
                 missingUsers.push(userLabel);
+                console.log(`${userLabel} の前日の記録が見つかりませんでした`);
+              } else {
+                console.log(`${userLabel} の前日の記録を確認しました`);
               }
             }
             
@@ -84,8 +91,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const today = `${{ steps.date.outputs.date }}`;
-            const missingUsers = `${{ steps.check-issues.outputs.missing_users }}`.split(',');
+            const yesterday = `${{ steps.date.outputs.date }}`;
+            const missingUsers = `${{ steps.check-issues.outputs.missing_users }}`.split(',').filter(u => u.trim());
             const penaltyAmount = 3000;
             
             // ペナルティ管理用のissueを検索
@@ -112,8 +119,8 @@ jobs:
               });
             }
             
-            // 今日のペナルティをコメントとして追加
-            const comment = `## ${today} のペナルティ\n\n`;
+            // 前日のペナルティをコメントとして追加
+            const comment = `## ${yesterday} のペナルティ\n\n`;
             const userPenalties = missingUsers.map(user => {
               const userName = user.replace('user-', '');
               return `- **@${userName}**: ${penaltyAmount}円`;
@@ -129,9 +136,9 @@ jobs:
               body: fullComment
             });
             
-            console.log(`ペナルティを記録しました: ${missingUsers.join(', ')}`);
+            console.log(`${yesterday} のペナルティを記録しました: ${missingUsers.join(', ')}`);
       
       - name: 成功通知
         if: steps.check-issues.outputs.has_penalty == 'false'
         run: |
-          echo "✅ 全員が今日の勉強記録を提出しました！"
+          echo "✅ 全員が前日の勉強記録を提出しました！"

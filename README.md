@@ -154,8 +154,8 @@ pip install -r requirements.txt
 4. Issueを作成
 
 #### チェックシステム
-- 毎日23:00 JSTに自動チェック
-- その日の記録がない場合、ペナルティが記録されます
+- 毎日朝5:00 JSTに自動チェック（前日の記録をチェック）
+- 前日の記録がない場合、ペナルティが記録されます
 - 詳細は [PENALTY_SYSTEM.md](./PENALTY_SYSTEM.md) を参照
 
 <br><br>
