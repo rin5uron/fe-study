@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "ask": [
+      "Bash(python3"
+    ],
+    "allow": [
+      "Bash(python3"
+    ]
+  }
+}
