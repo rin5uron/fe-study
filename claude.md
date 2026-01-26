@@ -6,6 +6,25 @@
 
 ---
 
+## 📅 毎日の学習フロー
+
+### 1. 開始時
+- 勉強記録issueを作成: `[勉強記録] YYYY-MM-DD`
+- ラベル: `daily-study`
+- 学習者: @dataanalytics2020
+
+### 2. 勉強中
+- 過去問道場で問題を解く: https://www.fe-siken.com/fekakomon.php
+- 結果をCSVで保存: `uron_report/reportYYYYMMDDHHMM.csv`
+
+### 3. 終了時
+1. CSVを読み込んで結果を分析
+2. 勉強記録issueを更新（問題数、正答率、学んだこと）
+3. 失敗問題集を作成: `failed_questions/YYYY-MM-DD.md`
+4. commit & push
+
+---
+
 ## 🏁 セッション終了ルール
 1. 勉強記録issueを更新（学習者は @dataanalytics2020）
 2. 失敗問題集を保存 (failed_questions/YYYY-MM-DD.md)
