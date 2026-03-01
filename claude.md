@@ -1,37 +1,76 @@
 # Claude へのメモ
 
+## 👤 学習者情報
+- **GitHubユーザー名**: @dataanalytics2020
+- issueで学習者を記載する際は必ず @dataanalytics2020 を使う
+
+---
+
+## 📅 毎日の学習フロー
+
+### 1. 開始時
+- 勉強記録issueを作成: `[勉強記録] YYYY-MM-DD`
+- ラベル: `daily-study`
+- 学習者: @dataanalytics2020
+
+### 2. 勉強中
+- 過去問道場で問題を解く: https://www.fe-siken.com/fekakomon.php
+- 結果をCSVで保存: `uron_report/reportYYYYMMDDHHMM.csv`
+
+### 3. 終了時
+1. CSVを読み込んで**今日の日付の問題だけ抽出**して結果を分析
+2. 勉強記録issueを更新（問題数、正答率、学んだこと）
+3. 失敗問題集を作成: `failed_questions/YYYY-MM-DD.md`
+4. commit & push
+
+---
+
+## ⚠️ 重要：CSVは累積データ
+
+過去問道場のCSVは**累積データ**。
+- 同じ問題が複数回出てきても「連続で間違えた」わけではない
+- 過去の学習記録が含まれている
+- **今日解いた問題だけを抽出するには学習日（最終列）でフィルタする**
+
+### CSV分析時のルール
+1. 学習日の列で今日の日付（例: 2026/1/27）をフィルタ
+2. 今日の分だけで正答率を計算
+3. 今日間違えた問題だけを失敗問題集に記録
+
+---
+
+## 🏁 セッション終了ルール
+1. 勉強記録issueを更新（学習者は @dataanalytics2020）
+2. 失敗問題集を保存 (failed_questions/YYYY-MM-DD.md)
+3. git add . && git commit && git push
+
+---
+
 ## 📌 重要：issueの更新方法
 
 ### ❌ これはダメ（コメント追加）
-```bash
 gh issue comment 50 --body "内容"
-```
-→ これは**コメント**として追加される
+→ これはコメントとして追加される
 
 ### ✅ これが正解（issue本文を更新）
-```bash
-gh issue edit 50 --body "$(cat <<'EOF'
-（issue全体の内容）
-EOF
-)"
-```
-→ これは**issue本文そのもの**を更新する
+gh issue edit 50 --body "内容"
+→ これはissue本文そのものを更新する
 
 ---
 
 ## 📝 学んだことを追加する手順
 
-1. まず `gh issue view 50` で現在のissue本文を確認
-2. 「📚 学んだこと」セクションに項目を追加
-3. `gh issue edit` で **issue本文全体** を書き換える
+1. まず gh issue view で現在のissue本文を確認
+2. 学んだことセクションに項目を追加
+3. gh issue edit で issue本文全体を書き換える
 
-**重要**: 「学んだこと」はissue本文に直接書く！コメントじゃない！
+重要: 学んだことはissue本文に直接書く！コメントじゃない！
 
 ---
 
 ## 🎯 覚えておくこと
 
-- **issue comment** = コメント欄に追加
-- **issue edit** = issue本文を書き換え
+- issue comment = コメント欄に追加
+- issue edit = issue本文を書き換え
 
-学んだことは必ず **issue edit** で本文に書く！
+学んだことは必ず issue edit で本文に書く！
