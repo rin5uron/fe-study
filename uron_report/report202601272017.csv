@@ -1,0 +1,24 @@
+No.,正誤,分野名,大分類,中分類,出典,学習日
+1,○,テクノロジ系,コンピュータシステム,コンピュータ構成要素,"=HYPERLINK(""https://www.fe-siken.com/kakomon/31_haru/q17.html"",""平成31年春期 問17"")",2026/1/27
+2,×,テクノロジ系,コンピュータシステム,ハードウェア,"=HYPERLINK(""https://www.fe-siken.com/kakomon/24_aki/q23.html"",""平成24年秋期 問23"")",2026/1/27
+3,○,マネジメント系,プロジェクトマネジメント,プロジェクトマネジメント,"=HYPERLINK(""https://www.fe-siken.com/kakomon/05_menjo/q42.html"",""令和5年免除 問42"")",2026/1/27
+4,-,テクノロジ系,技術要素,ネットワーク,"=HYPERLINK(""https://www.fe-siken.com/kakomon/27_haru/q32.html"",""平成27年春期 問32"")",2026/1/27
+5,○,ストラテジ系,企業と法務,法務,"=HYPERLINK(""https://www.fe-siken.com/kakomon/24_aki/q79.html"",""平成24年秋期 問79"")",2026/1/27
+6,×,テクノロジ系,開発技術,システム開発技術,"=HYPERLINK(""https://www.fe-siken.com/kakomon/25_aki/q47.html"",""平成25年秋期 問47"")",2026/1/27
+7,○,テクノロジ系,開発技術,システム開発技術,"=HYPERLINK(""https://www.fe-siken.com/kakomon/26_aki/q49.html"",""平成26年秋期 問49"")",2026/1/27
+8,○,テクノロジ系,コンピュータシステム,ハードウェア,"=HYPERLINK(""https://www.fe-siken.com/kakomon/30_aki/q23.html"",""平成30年秋期 問23"")",2026/1/27
+9,○,テクノロジ系,技術要素,セキュリティ,"=HYPERLINK(""https://www.fe-siken.com/kakomon/04_menjo/q38.html"",""令和4年免除 問38"")",2026/1/27
+10,×,テクノロジ系,技術要素,セキュリティ,"=HYPERLINK(""https://www.fe-siken.com/kakomon/31_haru/q41.html"",""平成31年春期 問41"")",2026/1/27
+11,○,テクノロジ系,基礎理論,アルゴリズムとプログラミング,"=HYPERLINK(""https://www.fe-siken.com/kakomon/30_aki/q5.html"",""平成30年秋期 問5"")",2026/1/27
+12,○,テクノロジ系,基礎理論,アルゴリズムとプログラミング,"=HYPERLINK(""https://www.fe-siken.com/kakomon/26_aki/q8.html"",""平成26年秋期 問8"")",2026/1/27
+13,○,マネジメント系,プロジェクトマネジメント,プロジェクトマネジメント,"=HYPERLINK(""https://www.fe-siken.com/kakomon/25_haru/q54.html"",""平成25年春期 問54"")",2026/1/27
+14,○,テクノロジ系,技術要素,セキュリティ,"=HYPERLINK(""https://www.fe-siken.com/kakomon/02_menjo/q40.html"",""令和2年免除 問40"")",2026/1/27
+15,×,ストラテジ系,経営戦略,ビジネスインダストリ,"=HYPERLINK(""https://www.fe-siken.com/kakomon/01_aki/q70.html"",""令和元年秋期 問70"")",2026/1/27
+16,×,ストラテジ系,システム戦略,システム戦略,"=HYPERLINK(""https://www.fe-siken.com/kakomon/25_aki/q61.html"",""平成25年秋期 問61"")",2026/1/27
+17,-,テクノロジ系,開発技術,システム開発技術,"=HYPERLINK(""https://www.fe-siken.com/kakomon/28_aki/q48.html"",""平成28年秋期 問48"")",2026/1/27
+18,○,ストラテジ系,システム戦略,システム戦略,"=HYPERLINK(""https://www.fe-siken.com/kakomon/25_haru/q62.html"",""平成25年春期 問62"")",2026/1/27
+19,○,ストラテジ系,システム戦略,システム戦略,"=HYPERLINK(""https://www.fe-siken.com/kakomon/27_aki/q61.html"",""平成27年秋期 問61"")",2026/1/27
+20,○,テクノロジ系,技術要素,データベース,"=HYPERLINK(""https://www.fe-siken.com/kakomon/30_aki/q29.html"",""平成30年秋期 問29"")",2026/1/27
+21,×,マネジメント系,サービスマネジメント,システム監査,"=HYPERLINK(""https://www.fe-siken.com/kakomon/25_aki/q60.html"",""平成25年秋期 問60"")",2026/1/27
+22,-,テクノロジ系,技術要素,ネットワーク,"=HYPERLINK(""https://www.fe-siken.com/kakomon/29_haru/q34.html"",""平成29年春期 問34"")",2026/1/27
+23,-,テクノロジ系,技術要素,ネットワーク,"=HYPERLINK(""https://www.fe-siken.com/kakomon/05_menjo/q23.html"",""令和5年免除 問23"")",2026/1/27
